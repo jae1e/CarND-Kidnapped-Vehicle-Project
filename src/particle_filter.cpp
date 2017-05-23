@@ -14,6 +14,8 @@
 
 using namespace std;
 
+const double EPS = 0.000001;
+
 void addNoise_(vector<Particle>& particles, double std[])
 {
 	default_random_engine rand;
@@ -106,7 +108,7 @@ void ParticleFilter::prediction(double delta_t, double std_pos[], double velocit
 	{
 		double theta = it->theta;
 
-		if (fabs(yaw_rate) < FLT_EPSILON)
+		if (fabs(yaw_rate) < EPS)
 		{
 			it->x += velocity * cos(theta) * delta_t;
 			it->y += velocity * sin(theta) * delta_t;
