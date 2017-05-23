@@ -57,7 +57,8 @@ double calcWeight_(const LandmarkObs& pred, const LandmarkObs& obs, double std_l
 {
 	return 1.0 / (2.0 * M_PI * std_landmark[0] * std_landmark[1])
 		* exp(
-			-1.0 * (pow(pred.x - obs.x, 2) / (2.0 * pow(std_landmark[0], 2)) 
+			-1.0 
+			* (pow(pred.x - obs.x, 2) / (2.0 * pow(std_landmark[0], 2)) 
 				+ pow(pred.y - obs.y, 2) / (2.0 * pow(std_landmark[1], 2)))
 		);
 }
@@ -88,7 +89,7 @@ void ParticleFilter::init(double x, double y, double theta, double std[]) {
 		particle.x = x;
 		particle.y = y;
 		particle.theta = theta;
-		particle.weight = 1.0 / num_particles;
+		particle.weight = 1.0;
 
 		particles.push_back(particle);
 	}
@@ -113,10 +114,12 @@ void ParticleFilter::prediction(double delta_t, double std_pos[], double velocit
 		else
 		{
 			double v_div_yr = velocity / yaw_rate;
-			double th_pl_yr_m_dt = theta + yaw_rate * delta_t;
+			double yr_m_dt = yaw_rate * delta_t;
+			double th_pl_yr_m_dt = theta + yr_m_dt;
 
 			it->x += v_div_yr * (sin(th_pl_yr_m_dt) - sin(theta));
 			it->y += v_div_yr * (cos(theta) - cos(th_pl_yr_m_dt));
+			it->theta += yr_m_dt;
 		}
 	}
 
